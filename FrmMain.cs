@@ -24,14 +24,6 @@ public partial class FrmMain : Form
         InitializeComponent();
     }
 
-    private void FrmMain_Load(object sender, EventArgs e)
-    {
-#if DEBUG
-        txtVideoKey.Text = "liAUm0d3sbE";
-        updnInstances.Value = 5;
-#endif
-    }
-
     async Task OpenVideo(string key)
     {
         if (_handles.Count > 0)
@@ -169,6 +161,14 @@ public partial class FrmMain : Form
 
             Task.Delay(replayCheckInSeconds);
         });
+    }
+
+    private void FrmMain_Load(object sender, EventArgs e)
+    {
+#if DEBUG
+        txtVideoKey.Text = "liAUm0d3sbE";
+        updnInstances.Value = 5;
+#endif
     }
 
     private void FrmMain_FormClosing(object sender, FormClosingEventArgs e) => Stop();
