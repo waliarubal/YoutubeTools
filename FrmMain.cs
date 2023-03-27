@@ -66,7 +66,16 @@ public partial class FrmMain : Form
 
         }
 
-        dgvWindows.BeginInvoke(() => dgvWindows.Rows.Add(handle, _driver.Title, state));
+        dgvWindows.BeginInvoke(() =>
+        {
+            var row = dgvWindows.Rows[dgvWindows.Rows.Add()];
+            row.Cells[0].Value = handle;
+            row.Cells[1].Value = _driver.Title;
+            row.Cells[2].Value = state;
+            row.HeaderCell.Value = row.Index + 1;
+
+            BeginInvoke(() => Text = $"YouTube Tools - {row.Index + 1}");
+        });
     }
 
     IWebElement GetElement(string xPath, int waitSeconds = 20)
@@ -102,6 +111,10 @@ public partial class FrmMain : Form
 
     async Task Start()
     {
+        _isRunning = true;
+        btnStop.Enabled = _isRunning;
+        btnRun.Enabled = !_isRunning;
+
         var config = new ChromeConfig();
 
         var manager = new DriverManager();
@@ -126,11 +139,16 @@ public partial class FrmMain : Form
         var videoKey = txtVideoKey.Text;
         var instances = updnInstances.Value;
         for (var count = 1; count < instances; count++)
+        {
+            if (!_isRunning)
+            {
+                Stop();
+                return;
+            }
+                
             await OpenVideo(videoKey);
-
-        _isRunning = true;
-        btnStop.Enabled = _isRunning;
-        btnRun.Enabled = !_isRunning;
+        }
+            
 
         var replayCheckInSeconds = (int)updnReplay.Value * 1000 * 60;
         if (replayCheckInSeconds == 0)
