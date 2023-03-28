@@ -40,6 +40,9 @@ partial class FrmMain
         label3 = new Label();
         updnReplay = new NumericUpDown();
         btnStop = new Button();
+        chkDelay = new CheckBox();
+        chkPreventDetection = new CheckBox();
+        chkMuteAudio = new CheckBox();
         ((System.ComponentModel.ISupportInitialize)dgvWindows).BeginInit();
         ((System.ComponentModel.ISupportInitialize)updnInstances).BeginInit();
         ((System.ComponentModel.ISupportInitialize)updnReplay).BeginInit();
@@ -52,11 +55,12 @@ partial class FrmMain
         dgvWindows.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         dgvWindows.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         dgvWindows.Columns.AddRange(new DataGridViewColumn[] { colHandle, colTitle, colState });
-        dgvWindows.Location = new Point(12, 70);
+        dgvWindows.Location = new Point(12, 116);
         dgvWindows.Name = "dgvWindows";
         dgvWindows.ReadOnly = true;
+        dgvWindows.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
         dgvWindows.RowTemplate.Height = 25;
-        dgvWindows.Size = new Size(600, 359);
+        dgvWindows.Size = new Size(600, 313);
         dgvWindows.TabIndex = 0;
         // 
         // colHandle
@@ -113,7 +117,7 @@ partial class FrmMain
         // 
         // btnRun
         // 
-        btnRun.Location = new Point(456, 41);
+        btnRun.Location = new Point(456, 87);
         btnRun.Name = "btnRun";
         btnRun.Size = new Size(75, 23);
         btnRun.TabIndex = 5;
@@ -142,7 +146,7 @@ partial class FrmMain
         // btnStop
         // 
         btnStop.Enabled = false;
-        btnStop.Location = new Point(537, 41);
+        btnStop.Location = new Point(537, 87);
         btnStop.Name = "btnStop";
         btnStop.Size = new Size(75, 23);
         btnStop.TabIndex = 8;
@@ -150,11 +154,50 @@ partial class FrmMain
         btnStop.UseVisualStyleBackColor = true;
         btnStop.Click += btnStop_Click;
         // 
+        // chkDelay
+        // 
+        chkDelay.AutoSize = true;
+        chkDelay.Checked = true;
+        chkDelay.CheckState = CheckState.Checked;
+        chkDelay.Location = new Point(12, 41);
+        chkDelay.Name = "chkDelay";
+        chkDelay.Size = new Size(264, 19);
+        chkDelay.TabIndex = 9;
+        chkDelay.Text = "Add a random delay between starting videos.";
+        chkDelay.UseVisualStyleBackColor = true;
+        // 
+        // chkPreventDetection
+        // 
+        chkPreventDetection.AutoSize = true;
+        chkPreventDetection.Checked = true;
+        chkPreventDetection.CheckState = CheckState.Checked;
+        chkPreventDetection.Location = new Point(12, 66);
+        chkPreventDetection.Name = "chkPreventDetection";
+        chkPreventDetection.Size = new Size(187, 19);
+        chkPreventDetection.TabIndex = 10;
+        chkPreventDetection.Text = "Prevent automation detection.";
+        chkPreventDetection.UseVisualStyleBackColor = true;
+        // 
+        // chkMuteAudio
+        // 
+        chkMuteAudio.AutoSize = true;
+        chkMuteAudio.Checked = true;
+        chkMuteAudio.CheckState = CheckState.Checked;
+        chkMuteAudio.Location = new Point(12, 91);
+        chkMuteAudio.Name = "chkMuteAudio";
+        chkMuteAudio.Size = new Size(163, 19);
+        chkMuteAudio.TabIndex = 11;
+        chkMuteAudio.Text = "Do not play video sounds.";
+        chkMuteAudio.UseVisualStyleBackColor = true;
+        // 
         // FrmMain
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(624, 441);
+        Controls.Add(chkMuteAudio);
+        Controls.Add(chkPreventDetection);
+        Controls.Add(chkDelay);
         Controls.Add(btnStop);
         Controls.Add(updnReplay);
         Controls.Add(label3);
@@ -189,4 +232,7 @@ partial class FrmMain
     private Label label3;
     private NumericUpDown updnReplay;
     private Button btnStop;
+    private CheckBox chkDelay;
+    private CheckBox chkPreventDetection;
+    private CheckBox chkMuteAudio;
 }

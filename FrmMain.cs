@@ -24,7 +24,7 @@ public partial class FrmMain : Form
         InitializeComponent();
     }
 
-    async Task OpenVideo(string key)
+    void OpenVideo(string key, bool isMuted)
     {
         if (_handles.Count > 0)
             _driver
@@ -37,8 +37,6 @@ public partial class FrmMain : Form
         _driver
             .Navigate()
             .GoToUrl($"{BASE_URL}?v={key}");
-
-        await Task.Delay(_random.Next(5, 10) * 1000);
 
         var videoControls = new WebDriverWait(_driver, TimeSpan.FromSeconds(10))
             .Until(driver => driver.FindElement(By.ClassName("ytp-chrome-controls")));
@@ -55,9 +53,12 @@ public partial class FrmMain : Form
             var btnPlay = GetElement(xPath);
             btnPlay?.Click();
 
-            xPath = "//button[contains(@class, 'ytp-mute-button ytp-button')]";
-            var btnMute = GetElement(".//button[@class='ytp-mute-button ytp-button']");
-            btnMute?.Click();
+            if (isMuted)
+            {
+                xPath = "//button[contains(@class, 'ytp-mute-button ytp-button')]";
+                var btnMute = GetElement(".//button[@class='ytp-mute-button ytp-button']");
+                btnMute?.Click();
+            }
 
             state = "Playing";
         }
@@ -70,7 +71,7 @@ public partial class FrmMain : Form
         {
             var row = dgvWindows.Rows[dgvWindows.Rows.Add()];
             row.Cells[0].Value = handle;
-            row.Cells[1].Value = _driver.Title;
+            row.Cells[1].Value = _driver == null ? string.Empty : _driver.Title;
             row.Cells[2].Value = state;
             row.HeaderCell.Value = row.Index + 1;
 
@@ -88,7 +89,8 @@ public partial class FrmMain : Form
         }
         catch (Exception ex) when (
             ex is NoSuchElementException ||
-            ex is WebDriverTimeoutException)
+            ex is WebDriverTimeoutException ||
+            ex is ObjectDisposedException)
         {
             return null;
         }
@@ -121,11 +123,17 @@ public partial class FrmMain : Form
         manager.SetUpDriver(config);
 
         var options = new ChromeOptions();
-        options.AddArgument("--mute-audio");
-        options.AddArgument("--incognito");
-        options.AddArgument("disable-infobars");
-        options.AddExcludedArgument("enable-automation");
-        options.AddAdditionalChromeOption("useAutomationExtension", false);
+
+        if (chkMuteAudio.Checked)
+            options.AddArgument("--mute-audio");
+
+        if (chkPreventDetection.Checked)
+        {
+            options.AddArgument("--incognito");
+            options.AddArgument("disable-infobars");
+            options.AddExcludedArgument("enable-automation");
+            options.AddAdditionalChromeOption("useAutomationExtension", false);
+        }
 
         var service = ChromeDriverService.CreateDefaultService();
         service.HideCommandPromptWindow = true;
@@ -136,19 +144,23 @@ public partial class FrmMain : Form
             .Window
             .Size = new Size(1024, 768);
 
+        var isMuted = chkMuteAudio.Checked;
+        var randomDelay = chkDelay.Checked;
         var videoKey = txtVideoKey.Text;
         var instances = updnInstances.Value;
         for (var count = 1; count < instances; count++)
         {
             if (!_isRunning)
-            {
-                Stop();
                 return;
-            }
-                
-            await OpenVideo(videoKey);
+
+            await Task.Run(async () =>
+            {
+                OpenVideo(videoKey, isMuted);
+
+                if (randomDelay)
+                    await Task.Delay(_random.Next(5, 10) * 1000);
+            });
         }
-            
 
         var replayCheckInSeconds = (int)updnReplay.Value * 1000 * 60;
         if (replayCheckInSeconds == 0)
