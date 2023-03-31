@@ -1,3 +1,4 @@
+using AngleSharp.Text;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
@@ -10,10 +11,14 @@ namespace YoutubeTools;
 public partial class FrmMain : Form
 {
     const string BASE_URL = "https://www.youtube.com/watch";
+    const string XPATH_PLAY = "//button[contains(@class, 'ytp-play-button ytp-button') and @data-title-no-tooltip='Play']";
+    const string XPATH_MUTE = "//button[contains(@class, 'ytp-mute-button ytp-button')]";
+    const string XPATH_TIME = "//span[@class = 'ytp-time-duration']";
 
     readonly List<string> _handles;
     readonly Random _random;
     bool _isRunning;
+    TimeSpan _duration;
     IWebDriver _driver;
 
     public FrmMain()
@@ -46,17 +51,34 @@ public partial class FrmMain : Form
             .MoveToElement(videoControls)
             .Perform();
 
+        TimeSpan totalTime;
         var state = "Unknown";
         try
         {
-            var xPath = "//button[contains(@class, 'ytp-play-button ytp-button') and @data-title-no-tooltip='Play']";
-            var btnPlay = GetElement(xPath);
+            var btnPlay = GetElement(XPATH_PLAY);
             btnPlay?.Click();
+
+            var timeString = GetElement(XPATH_TIME)?
+                .GetAttribute("textContent")?
+                .SplitWithTrimming(':');
+            switch (timeString.Length)
+            {
+                case 3:
+                    totalTime = new TimeSpan(int.Parse(timeString[0]), int.Parse(timeString[1]), int.Parse(timeString[2]));
+                    break;
+
+                case 2:
+                    totalTime = new TimeSpan(0, int.Parse(timeString[0]), int.Parse(timeString[1]));
+                    break;
+
+                default:
+                    totalTime = new TimeSpan(0, 0, int.Parse(timeString[0]));
+                    break;
+            }
 
             if (isMuted)
             {
-                xPath = "//button[contains(@class, 'ytp-mute-button ytp-button')]";
-                var btnMute = GetElement(".//button[@class='ytp-mute-button ytp-button']");
+                var btnMute = GetElement(XPATH_MUTE);
                 btnMute?.Click();
             }
 
@@ -64,7 +86,7 @@ public partial class FrmMain : Form
         }
         catch
         {
-
+            totalTime = TimeSpan.Zero;
         }
 
         dgvWindows.BeginInvoke(() =>
@@ -73,7 +95,9 @@ public partial class FrmMain : Form
             row.Cells[0].Value = handle;
             row.Cells[1].Value = _driver == null ? string.Empty : _driver.Title;
             row.Cells[2].Value = state;
+            row.Cells[3].Value = $"{totalTime.Hours:00}:{totalTime.Minutes:00}:{totalTime.Seconds:00}";
             row.HeaderCell.Value = row.Index + 1;
+            row.Tag = totalTime;
 
             BeginInvoke(() => Text = $"YouTube Tools - {row.Index + 1}");
         });
@@ -184,8 +208,7 @@ public partial class FrmMain : Form
                         .SwitchTo()
                         .Window(handle);
 
-                    var xPath = "//button[contains(@class, 'ytp-play-button ytp-button') and @data-title-no-tooltip='Play']";
-                    var btnPlay = GetElement(xPath);
+                    var btnPlay = GetElement(XPATH_PLAY);
                     btnPlay?.Click();
 
                     row.Cells[2].Value = "Playing";

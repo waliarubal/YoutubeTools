@@ -32,6 +32,7 @@ partial class FrmMain
         colHandle = new DataGridViewTextBoxColumn();
         colTitle = new DataGridViewTextBoxColumn();
         colState = new DataGridViewTextBoxColumn();
+        colTime = new DataGridViewTextBoxColumn();
         label1 = new Label();
         txtVideoKey = new TextBox();
         label2 = new Label();
@@ -55,7 +56,7 @@ partial class FrmMain
         dgvWindows.AllowUserToDeleteRows = false;
         dgvWindows.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         dgvWindows.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        dgvWindows.Columns.AddRange(new DataGridViewColumn[] { colHandle, colTitle, colState });
+        dgvWindows.Columns.AddRange(new DataGridViewColumn[] { colHandle, colTitle, colState, colTime });
         dgvWindows.Location = new Point(12, 116);
         dgvWindows.Name = "dgvWindows";
         dgvWindows.ReadOnly = true;
@@ -81,6 +82,12 @@ partial class FrmMain
         colState.HeaderText = "State";
         colState.Name = "colState";
         colState.ReadOnly = true;
+        // 
+        // colTime
+        // 
+        colTime.HeaderText = "Total Time";
+        colTime.Name = "colTime";
+        colTime.ReadOnly = true;
         // 
         // label1
         // 
@@ -118,6 +125,7 @@ partial class FrmMain
         // 
         // btnRun
         // 
+        btnRun.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnRun.Location = new Point(456, 87);
         btnRun.Name = "btnRun";
         btnRun.Size = new Size(75, 23);
@@ -146,6 +154,7 @@ partial class FrmMain
         // 
         // btnStop
         // 
+        btnStop.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnStop.Enabled = false;
         btnStop.Location = new Point(537, 87);
         btnStop.Name = "btnStop";
@@ -221,6 +230,7 @@ partial class FrmMain
         Controls.Add(txtVideoKey);
         Controls.Add(label1);
         Controls.Add(dgvWindows);
+        MinimumSize = new Size(640, 480);
         Name = "FrmMain";
         Text = "YouTube Tools";
         FormClosing += FrmMain_FormClosing;
@@ -235,9 +245,6 @@ partial class FrmMain
     #endregion
 
     private DataGridView dgvWindows;
-    private DataGridViewTextBoxColumn colHandle;
-    private DataGridViewTextBoxColumn colTitle;
-    private DataGridViewTextBoxColumn colState;
     private Label label1;
     private TextBox txtVideoKey;
     private Label label2;
@@ -250,4 +257,8 @@ partial class FrmMain
     private CheckBox chkPreventDetection;
     private CheckBox chkMuteAudio;
     private CheckBox chkHeadless;
+    private DataGridViewTextBoxColumn colHandle;
+    private DataGridViewTextBoxColumn colTitle;
+    private DataGridViewTextBoxColumn colState;
+    private DataGridViewTextBoxColumn colTime;
 }
