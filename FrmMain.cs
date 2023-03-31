@@ -15,7 +15,6 @@ public partial class FrmMain : Form
     const string XPATH_MUTE = "//button[contains(@class, 'ytp-mute-button ytp-button')]";
     const string XPATH_TIME = "//span[@class = 'ytp-time-duration']";
 
-    readonly List<string> _handles;
     readonly Random _random;
     bool _isRunning;
     TimeSpan _duration;
@@ -23,21 +22,20 @@ public partial class FrmMain : Form
 
     public FrmMain()
     {
+        _duration = TimeSpan.Zero;
         _random = new Random();
-        _handles = new List<string>();
 
         InitializeComponent();
     }
 
     void OpenVideo(string key, bool isMuted)
     {
-        if (_handles.Count > 0)
+        if (dgvWindows.RowCount > 0)
             _driver
                 .SwitchTo()
                 .NewWindow(WindowType.Window);
 
         var handle = _driver.CurrentWindowHandle;
-        _handles.Add(handle);
 
         _driver
             .Navigate()
@@ -51,29 +49,31 @@ public partial class FrmMain : Form
             .MoveToElement(videoControls)
             .Perform();
 
-        TimeSpan totalTime;
         var state = "Unknown";
         try
         {
             var btnPlay = GetElement(XPATH_PLAY);
             btnPlay?.Click();
 
-            var timeString = GetElement(XPATH_TIME)?
-                .GetAttribute("textContent")?
-                .SplitWithTrimming(':');
-            switch (timeString.Length)
+            if (_duration == TimeSpan.Zero)
             {
-                case 3:
-                    totalTime = new TimeSpan(int.Parse(timeString[0]), int.Parse(timeString[1]), int.Parse(timeString[2]));
-                    break;
+                var timeString = GetElement(XPATH_TIME)?
+                    .GetAttribute("textContent")?
+                    .SplitWithTrimming(':');
+                switch (timeString?.Length)
+                {
+                    case 3:
+                        _duration = new TimeSpan(int.Parse(timeString[0]), int.Parse(timeString[1]), int.Parse(timeString[2]));
+                        break;
 
-                case 2:
-                    totalTime = new TimeSpan(0, int.Parse(timeString[0]), int.Parse(timeString[1]));
-                    break;
+                    case 2:
+                        _duration = new TimeSpan(0, int.Parse(timeString[0]), int.Parse(timeString[1]));
+                        break;
 
-                default:
-                    totalTime = new TimeSpan(0, 0, int.Parse(timeString[0]));
-                    break;
+                    case 1:
+                        _duration = new TimeSpan(0, 0, int.Parse(timeString[0]));
+                        break;
+                }
             }
 
             if (isMuted)
@@ -86,7 +86,7 @@ public partial class FrmMain : Form
         }
         catch
         {
-            totalTime = TimeSpan.Zero;
+
         }
 
         dgvWindows.BeginInvoke(() =>
@@ -95,9 +95,8 @@ public partial class FrmMain : Form
             row.Cells[0].Value = handle;
             row.Cells[1].Value = _driver == null ? string.Empty : _driver.Title;
             row.Cells[2].Value = state;
-            row.Cells[3].Value = $"{totalTime.Hours:00}:{totalTime.Minutes:00}:{totalTime.Seconds:00}";
+            row.Cells[3].Value = $"{_duration.Hours:00}:{_duration.Minutes:00}:{_duration.Seconds:00}";
             row.HeaderCell.Value = row.Index + 1;
-            row.Tag = totalTime;
 
             BeginInvoke(() => Text = $"YouTube Tools - {row.Index + 1}");
         });
@@ -125,6 +124,7 @@ public partial class FrmMain : Form
         if (!_isRunning)
             return;
 
+        _duration = TimeSpan.Zero;
         _isRunning = false;
         btnStop.Enabled = _isRunning;
         btnRun.Enabled = !_isRunning;
@@ -175,7 +175,7 @@ public partial class FrmMain : Form
         var randomDelay = chkDelay.Checked;
         var videoKey = txtVideoKey.Text;
         var instances = updnInstances.Value;
-        for (var count = 1; count < instances; count++)
+        for (var count = 1; count <= instances; count++)
         {
             if (!_isRunning)
                 return;
@@ -193,6 +193,7 @@ public partial class FrmMain : Form
         if (replayCheckInSeconds == 0)
             return;
 
+        // video status update task
         await Task.Run(() =>
         {
             if (!_isRunning)
@@ -222,7 +223,7 @@ public partial class FrmMain : Form
     private void FrmMain_Load(object sender, EventArgs e)
     {
 #if DEBUG
-        txtVideoKey.Text = "liAUm0d3sbE";
+        txtVideoKey.Text = "EQeGzMYqfsU";
         updnInstances.Value = 5;
 #endif
     }
