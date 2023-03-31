@@ -194,6 +194,8 @@ partial class FrmMain
         // chkHeadless
         // 
         chkHeadless.AutoSize = true;
+        chkHeadless.Checked = true;
+        chkHeadless.CheckState = CheckState.Checked;
         chkHeadless.Location = new Point(282, 41);
         chkHeadless.Name = "chkHeadless";
         chkHeadless.Size = new Size(144, 19);
