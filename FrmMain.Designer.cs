@@ -43,6 +43,7 @@ partial class FrmMain
         chkDelay = new CheckBox();
         chkPreventDetection = new CheckBox();
         chkMuteAudio = new CheckBox();
+        chkHeadless = new CheckBox();
         ((System.ComponentModel.ISupportInitialize)dgvWindows).BeginInit();
         ((System.ComponentModel.ISupportInitialize)updnInstances).BeginInit();
         ((System.ComponentModel.ISupportInitialize)updnReplay).BeginInit();
@@ -52,7 +53,7 @@ partial class FrmMain
         // 
         dgvWindows.AllowUserToAddRows = false;
         dgvWindows.AllowUserToDeleteRows = false;
-        dgvWindows.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        dgvWindows.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         dgvWindows.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
         dgvWindows.Columns.AddRange(new DataGridViewColumn[] { colHandle, colTitle, colState });
         dgvWindows.Location = new Point(12, 116);
@@ -190,11 +191,22 @@ partial class FrmMain
         chkMuteAudio.Text = "Do not play video sounds.";
         chkMuteAudio.UseVisualStyleBackColor = true;
         // 
+        // chkHeadless
+        // 
+        chkHeadless.AutoSize = true;
+        chkHeadless.Location = new Point(282, 41);
+        chkHeadless.Name = "chkHeadless";
+        chkHeadless.Size = new Size(144, 19);
+        chkHeadless.TabIndex = 12;
+        chkHeadless.Text = "Hide browser window.";
+        chkHeadless.UseVisualStyleBackColor = true;
+        // 
         // FrmMain
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(624, 441);
+        Controls.Add(chkHeadless);
         Controls.Add(chkMuteAudio);
         Controls.Add(chkPreventDetection);
         Controls.Add(chkDelay);
@@ -235,4 +247,5 @@ partial class FrmMain
     private CheckBox chkDelay;
     private CheckBox chkPreventDetection;
     private CheckBox chkMuteAudio;
+    private CheckBox chkHeadless;
 }

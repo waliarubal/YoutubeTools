@@ -124,6 +124,9 @@ public partial class FrmMain : Form
 
         var options = new ChromeOptions();
 
+        if (chkHeadless.Checked)
+            options.AddArgument("--headless=new");
+
         if (chkMuteAudio.Checked)
             options.AddArgument("--mute-audio");
 
