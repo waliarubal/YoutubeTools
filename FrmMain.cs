@@ -26,6 +26,11 @@ public partial class FrmMain : Form
         _random = new Random();
 
         InitializeComponent();
+
+#if DEBUG
+        txtVideoKey.Text = "wfGKe09h09o";
+        updnInstances.Value = 5;
+#endif
     }
 
     void OpenVideo(string key, bool isMuted)
@@ -218,14 +223,6 @@ public partial class FrmMain : Form
 
             Task.Delay(replayCheckInSeconds);
         });
-    }
-
-    private void FrmMain_Load(object sender, EventArgs e)
-    {
-#if DEBUG
-        txtVideoKey.Text = "EQeGzMYqfsU";
-        updnInstances.Value = 5;
-#endif
     }
 
     private void FrmMain_FormClosing(object sender, FormClosingEventArgs e) => Stop();

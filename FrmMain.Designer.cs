@@ -234,7 +234,6 @@ partial class FrmMain
         Name = "FrmMain";
         Text = "YouTube Tools";
         FormClosing += FrmMain_FormClosing;
-        Load += FrmMain_Load;
         ((System.ComponentModel.ISupportInitialize)dgvWindows).EndInit();
         ((System.ComponentModel.ISupportInitialize)updnInstances).EndInit();
         ((System.ComponentModel.ISupportInitialize)updnReplay).EndInit();
