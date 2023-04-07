@@ -35,10 +35,10 @@ public partial class FrmMain : Form
 
     void OpenVideo(string key, bool isMuted)
     {
-        if (dgvWindows.RowCount > 0)
-            _driver
-                .SwitchTo()
-                .NewWindow(WindowType.Window);
+        //if (dgvWindows.RowCount > 0)
+        _driver
+            .SwitchTo()
+            .NewWindow(WindowType.Window);
 
         var handle = _driver.CurrentWindowHandle;
 
