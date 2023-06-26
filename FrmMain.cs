@@ -28,17 +28,17 @@ public partial class FrmMain : Form
         InitializeComponent();
 
 #if DEBUG
-        txtVideoKey.Text = "wfGKe09h09o";
+        txtVideoKey.Text = "JQtuAtSYvPQ";
         updnInstances.Value = 5;
 #endif
     }
 
     void OpenVideo(string key, bool isMuted)
     {
-        //if (dgvWindows.RowCount > 0)
-        _driver
-            .SwitchTo()
-            .NewWindow(WindowType.Window);
+        if (dgvWindows.RowCount > 0)
+            _driver
+                .SwitchTo()
+                .NewWindow(WindowType.Window);
 
         var handle = _driver.CurrentWindowHandle;
 
