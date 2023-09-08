@@ -28,7 +28,7 @@ public partial class FrmMain : Form
         InitializeComponent();
 
 #if DEBUG
-        txtVideoKey.Text = "JQtuAtSYvPQ";
+        txtVideoKey.Text = "En-CLgCWiZk";
         updnInstances.Value = 5;
 #endif
     }
