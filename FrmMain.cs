@@ -96,6 +96,9 @@ public partial class FrmMain : Form
 
         dgvWindows.BeginInvoke(() =>
         {
+            if (!_isRunning)
+                return;
+
             var row = dgvWindows.Rows[dgvWindows.Rows.Add()];
             row.Cells[0].Value = handle;
             row.Cells[1].Value = _driver == null ? string.Empty : _driver.Title;
@@ -187,6 +190,9 @@ public partial class FrmMain : Form
 
             await Task.Run(async () =>
             {
+                if (!_isRunning)
+                    return;
+
                 OpenVideo(videoKey, isMuted);
 
                 if (randomDelay)
