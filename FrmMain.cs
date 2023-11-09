@@ -1,10 +1,7 @@
-using AngleSharp.Text;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
 
 namespace YoutubeTools;
 
@@ -64,7 +61,8 @@ public partial class FrmMain : Form
             {
                 var timeString = GetElement(XPATH_TIME)?
                     .GetAttribute("textContent")?
-                    .SplitWithTrimming(':');
+                    .Trim()
+                    .Split(':');
                 switch (timeString?.Length)
                 {
                     case 3:
@@ -148,11 +146,6 @@ public partial class FrmMain : Form
         _isRunning = true;
         btnStop.Enabled = _isRunning;
         btnRun.Enabled = !_isRunning;
-
-        var config = new ChromeConfig();
-
-        var manager = new DriverManager();
-        manager.SetUpDriver(config);
 
         var options = new ChromeOptions();
 
